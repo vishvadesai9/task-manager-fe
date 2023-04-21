@@ -10,15 +10,13 @@ const Login = () => {
 
     const [user, setUser] = useState(''); 
     const [pwd, setPwd] = useState('');
-    const [errMsg, setErrMsg] = useState(''); // if error when authenticate
+    const [errMsg, setErrMsg] = useState(''); // if error when authenticate 
     const [success, setSuccess] = useState(false); // for testing -> will be replace with react router (page)
 
     // set focus on input when component loads
     useEffect(() => {
         userRef.current.focus();
     }, [])
-
-// h
     
     // empty out errors msg if user change user/pwd state
     useEffect(() => {
