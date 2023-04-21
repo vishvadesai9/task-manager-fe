@@ -3,7 +3,8 @@ import './styles.css';
 
 import moment from 'moment'
 import { Button } from "@material-ui/core"
-import TaskModal from './Form'
+import TaskModal from './Pages/Form'
+
 let isEdit = false
 let userTask = new Object()
 
