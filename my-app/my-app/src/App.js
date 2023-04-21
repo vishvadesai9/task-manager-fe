@@ -1,6 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './styles.css';
+
 import moment from 'moment'
+import { Button } from "@material-ui/core"
+import TaskModal from './Form'
+let isEdit = false
+let userTask = new Object()
 
 const useSortableData = (items, config = null) => {
   const [sortConfig, setSortConfig] = React.useState(config);
@@ -36,7 +41,20 @@ const useSortableData = (items, config = null) => {
   return { items: sortedItems, requestSort, sortConfig };
 };
 
+
+
 const TaskViewer = (props) => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if(reason !== 'backdropClick') {
+      setOpen(false);
+  }
+  };
   const { items, requestSort, sortConfig } = useSortableData(props.products);
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
@@ -45,6 +63,9 @@ const TaskViewer = (props) => {
     return sortConfig.key === name ? sortConfig.direction : undefined;
   };
   return (
+    <div>
+    <Button variant="contained" color="primary" onClick={handleOpen}>Create Task</Button>
+    <TaskModal open={open} onClose={handleClose} className="modal" user_id="d187d4ec-2a93-468b-b2ca-72609f6ae92e" isEdit={isEdit} userTasks={userTask}/>    
     <table>
       <caption>Tasks</caption>
       <thead>
@@ -88,12 +109,18 @@ const TaskViewer = (props) => {
         ))}
       </tbody>
     </table>
+    </div>
   );
 };
 
+
+
 export default function App() {
+  
   return (
     <div className="App">
+    
+
       <TaskViewer
         products={[
           { id: 1, title: 'Task1', status: "DONE", dueDate: moment(new Date("2016-01-02 10:34:23")).format('MM-DD-YYYY') },
