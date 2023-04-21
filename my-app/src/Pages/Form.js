@@ -3,24 +3,20 @@ import { Button, Modal, TextField, Select, MenuItem, InputLabel, FormControl, Fo
 import { Typography } from '@material-ui/core';
 
 function TaskModal({ open, onClose, user_id, isEdit, userTask }) {
-
   const today = new Date().toISOString().slice(0, 10)
-  let [title, setTitle] = useState("");
-  let [description, setDescription] = useState("");
-  let [status, setStatus] = useState("To do");
-  let [dueDate, setDueDate] = useState(new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000)); // 2 days from today
+  const defaultDueDate = new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000); // 2 days from today
+  let [title, setTitle] = useState(isEdit && userTask ? userTask.title : "");
+  let [description, setDescription] = useState(isEdit && userTask ? userTask.description : "");
+  let [status, setStatus] = useState(isEdit && userTask ? userTask.status : "To do");
+  let [dueDate, setDueDate] = useState(isEdit && userTask ? new Date(userTask.due_date) : defaultDueDate); // 2 days from today
   let [loading, setLoading] = useState(false);
-  if (isEdit && userTask) {
-    setTitle(userTask.title)
-    setDescription(userTask.description)
-    setStatus(userTask.status)
-    setDueDate(new Date(userTask.due_date))
+  let [required, setRequired] = useState(true);
 
-  }
+ 
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    
     try {
       const requestOptions = {
         method: isEdit ? 'PUT' : 'POST',
@@ -56,7 +52,7 @@ function TaskModal({ open, onClose, user_id, isEdit, userTask }) {
           </Typography>
         </div>
         <div style={{ margin: "20px" }}>
-          <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required/>
+          <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required={required}/>
         </div>
         <div style={{ margin: "20px" }}>
           <TextField label="Description"
@@ -65,11 +61,11 @@ function TaskModal({ open, onClose, user_id, isEdit, userTask }) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               inputProps={{ maxLength: 1000 }} 
-              required
+              required = {required}
               />
         </div>
         <div style={{ marginTop: "10px", marginRight: "5%", display: "flex", alignItems: "flex-end", justifyContent: "end",
-            fontSize: "12px" }}>{description.length} / 1000</div>
+            fontSize: "12px" }}>{description?.length} / 1000</div>
         {isEdit ? (
         <div style={{ margin: "20px"  }}>
           <FormControl>
@@ -90,7 +86,7 @@ function TaskModal({ open, onClose, user_id, isEdit, userTask }) {
           <Button type="submit" variant="contained" color="primary" disabled={loading}>
           {loading ? <CircularProgress size={20} /> : "Submit"}
           </Button>
-          <Button type="close" variant="contained" color="secondary" style={{ marginLeft: "10px"}} disabled={loading}>
+          <Button  onClick={onClose} variant="contained" color="secondary" style={{ marginLeft: "10px"}} disabled={loading}>
             Cancel
           </Button>
             </div>

@@ -1,23 +1,76 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 // import './Pages/styles.css';
 import moment from 'moment';
 import { Button } from "@material-ui/core";
 import TaskModal from '../../src/Pages/Form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 let user_id = "";
 let isEdit = false;
+let userTasks = [];
 let userTask = new Object();
 
 const TaskManager = () =>  {
+  let [gettingTasks, setGettingTasks] = useState(false);
+
+  const getTasks = async ()=> {
+    try {
+      setGettingTasks(true)
+      const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      }
+      const url = `https://task-manager-api-tcy9.onrender.com/tasks/?user_id=${user_id}`;
+      let response = await fetch(url, requestOptions)
+      let responseJson = await response.json()
+      console.log(responseJson)
+      if (responseJson.success){
+        userTasks = responseJson.data
+      }
+      else{
+        //error
+      }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setGettingTasks(false)
+  }
+  } 
+
+  const deleteTask = async (task_id)=> {
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    }
+    const url = `https://task-manager-api-tcy9.onrender.com/tasks/${task_id}/`;
+    let response = await fetch(url, requestOptions)
+    getTasks();
+  }
+
+  useEffect(() => {
+    getTasks();
+  }, []);
 
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
+    
     setOpen(true);
   };
 
+const openEditModel = (item) => {
+  isEdit=true
+  userTask = item
+  handleOpen();
+}
+
   const handleClose = (event, reason) => {
     if(reason !== 'backdropClick') {
+      isEdit=false
+      setTimeout(function(){
+        getTasks();
+     }, 2000);
       setOpen(false);
   }
   };
@@ -55,8 +108,8 @@ const TaskManager = () =>  {
       
         return { items: sortedItems, requestSort, sortConfig };
       };
-
       const TaskViewer = (props) => {
+        
         const { items, requestSort, sortConfig } = useSortableData(props.products);
         const getClassNamesFor = (name) => {
           if (!sortConfig) {
@@ -65,19 +118,20 @@ const TaskManager = () =>  {
           return sortConfig.key === name ? sortConfig.direction : undefined;
         };
         return (
-            <div><Button variant="contained" color="primary" onClick={handleOpen}>Create Task</Button>
-            <TaskModal open={open} onClose={handleClose} className="modal" user_id={user_id} isEdit={isEdit} userTasks={userTask}/>
+           <div>{ !gettingTasks ? (<div><Button variant="contained" color="primary" onClick={handleOpen}>Create Task</Button>
+          <TaskModal open={open} onClose={handleClose} user_id={user_id} isEdit={isEdit} userTask={userTask}/>
           <table>
             <caption>Tasks</caption>
             <thead>
               <tr>
                 <th>
+                Title
                   <button
                     type="button"
                     onClick={() => requestSort('title')}
                     className={getClassNamesFor('title')}
                   >
-                    Title
+                 
                   </button>
                 </th>
                 <th>
@@ -108,32 +162,28 @@ const TaskManager = () =>  {
             </thead>
             <tbody>
               {items.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.task_id}>
                   <td>{item.title}</td>
                   <td>{item.description}</td>
                   <td>{item.status}</td>
                   <td>{item.due_date}</td>
-                  <td></td>
+                  <td>
+                  <Button variant="contained" color="primary" onClick={() => openEditModel(item)}>Edit</Button>
+                  <Button style={{marginLeft: "5px"}} onClick={() => deleteTask(item.task_id)}>Delete</Button></td>
                 </tr>
               ))}
             </tbody>
-          </table>
-          </div>
+          </table></div>) : null}
+          </div> 
+            
         );
       };
 
       return (
         <div className="App">
+        
           <TaskViewer
-            products={[
-              { id: 1, title: 'Task1', description: "description", status: "DONE", due_date: moment(new Date("2016-01-02 10:34:23")).format('MM-DD-YYYY') },
-              { id: 2, title: 'Task2', description: "description", status: "TO DO", due_date: moment(new Date("2017-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 3, title: 'Task3', description: "description", status: "IN_PROGRESS", due_date: moment(new Date("2018-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 4, title: 'Task4', description: "description", status: "IN_PROGRESS", due_date: moment(new Date("2019-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 5, title: 'Task5', description: "description", status: "TO DO", due_date: moment(new Date("2015-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 6, title: 'Task6', description: "description", status: "DONE", due_date: moment(new Date("2011-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 7, title: 'Task7', description: "description", status: "TO DO", due_date: moment(new Date("2026-01-04 10:34:23")).format('MM-DD-YYYY') },
-            ]}
+            products={userTasks} 
           />
         </div>
       );
