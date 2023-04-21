@@ -1,5 +1,6 @@
 import React from 'react'
 import {useEffect, useRef, useState} from 'react';
+import { Link } from 'react-router-dom';
 
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -29,7 +30,7 @@ const Register = () => {
 
   
   
-  seEffect(() => {
+  useEffect(() => {
     userRef.current.focus();
 }, [])
 
@@ -55,33 +56,33 @@ const handleSubmit = async (e) => {
         setErrMsg("Invalid Entry");
         return;
     }
-    try {
-        const response = await axios.post(REGISTER_URL,
-            JSON.stringify({ user, pwd }),
-            {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
-            }
-        );
-        console.log(response?.data);
-        console.log(response?.accessToken);
-        console.log(JSON.stringify(response))
-        setSuccess(true);
-        //clear state and controlled inputs
-        //need value attrib on inputs for this
-        setUser('');
-        setPwd('');
-        setMatchPwd('');
-    } catch (err) {
-        if (!err?.response) {
-            setErrMsg('No Server Response');
-        } else if (err.response?.status === 409) {
-            setErrMsg('Username Taken');
-        } else {
-            setErrMsg('Registration Failed')
-        }
-        errRef.current.focus();
-    }
+    // try {
+    //     const response = await axios.post(REGISTER_URL,
+    //         JSON.stringify({ user, pwd }),
+    //         {
+    //             headers: { 'Content-Type': 'application/json' },
+    //             withCredentials: true
+    //         }
+    //     );
+    //     console.log(response?.data);
+    //     console.log(response?.accessToken);
+    //     console.log(JSON.stringify(response))
+    //     setSuccess(true);
+    //     //clear state and controlled inputs
+    //     //need value attrib on inputs for this
+    //     setUser('');
+    //     setPwd('');
+    //     setMatchPwd('');
+    // } catch (err) {
+    //     if (!err?.response) {
+    //         setErrMsg('No Server Response');
+    //     } else if (err.response?.status === 409) {
+    //         setErrMsg('Username Taken');
+    //     } else {
+    //         setErrMsg('Registration Failed')
+    //     }
+    //     errRef.current.focus();
+    // }
 }
 
   return (
@@ -118,9 +119,9 @@ const handleSubmit = async (e) => {
                 />
                 <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
                     <FontAwesomeIcon icon={faInfoCircle} />
-                    6 characters minimum.<br />
-                    Must begin with a letter.<br />
-                    Letters, digits.
+                     6 characters minimum.<br />
+                    Must have a one uppercase/lowercase and one digit.<br />
+                    Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
                 </p>
 
 
@@ -143,7 +144,7 @@ const handleSubmit = async (e) => {
                 <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
                     <FontAwesomeIcon icon={faInfoCircle} />
                     6 characters minimum.<br />
-                    Must include uppercase and lowercase letters, a digit<br />
+                    Must have a one uppercase/lowercase and one digit.<br />
                     Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
                 </p>
 
@@ -174,8 +175,8 @@ const handleSubmit = async (e) => {
             <p>
                 Already registered?<br />
                 <span className="line">
-                    {/*put router link here*/}
-                    <a href="#">Sign In</a>
+                    {/*put router link to login here*/}
+                    <Link to="/login">Sign In</Link>
                 </span>
             </p>
         </section>

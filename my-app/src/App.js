@@ -11,12 +11,12 @@ function App() {
 
   return (
     <main className="App">
-      {/* {
+      {
         // if form is not login, display register (ternary)
-        currentform === "login" ? <Login /> :  <Register /> 
-      } */}
-      <Login />
-      
+        currentForm === "login" ? <Login /> :  <Register /> 
+      }
+      {/* <Register />
+      <Login /> */}
     </main>
   );
 }
