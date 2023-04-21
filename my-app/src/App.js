@@ -9,8 +9,6 @@ import Register from'./Pages/Register';
 import TaskManager from './Pages/TaskManager';
 
 
-
-
 function App() {
 
   // to set the current value of the state to display

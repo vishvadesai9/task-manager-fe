@@ -9,15 +9,22 @@ const Login = () => {
     const userRef = useRef(); // set focus on input when component loads
     const errRef = useRef(); // set focus on screen reader when error occurs
 
-    const [user, setUser] = useState(''); 
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user'))?.username || ''); // retrieve the user information from localStorage and set the initial state
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState(''); // if error when authenticate 
     const [success, setSuccess] = useState(false); // for testing -> will be replace with react router (page)
     const [loading, setLoading] = useState(false);
+
     // set focus on input when component loads
     useEffect(() => {
         userRef.current.focus();
     }, [])
+
+    // test localStorage
+    localStorage.setItem('myKey', 'myValue');
+    const value = localStorage.getItem('myKey');
+    console.log("value of localStorage " + value);
+    localStorage.removeItem('myKey');
     
     // empty out errors msg if user change user/pwd state
     useEffect(() => {
@@ -41,6 +48,12 @@ const Login = () => {
         if (responseJson.success){
           setSuccess(responseJson.success)
           userData = responseJson
+          localStorage.setItem('user', JSON.stringify(userData)); // store user information in localStorage
+            
+          // log the value of myKey and myValue
+          localStorage.setItem('myKey', 'myValue');
+          const myKey = localStorage.getItem('myKey');
+          console.log("value of myKey: " + myKey);
         }
         else{
           setErrMsg(responseJson.message)
@@ -50,9 +63,15 @@ const Login = () => {
     } finally {
       setLoading(false)
     }
-      
-    }
-  
+  }
+
+  // logout function to remove user from localStorage
+     const handleLogout = () => {
+     localStorage.removeItem('user');
+     localStorage.removeItem('myKey');
+     setSuccess(false);
+     setUser('');
+}
   return (
     
   <> {success ? ( // ternary operator
@@ -62,6 +81,7 @@ const Login = () => {
       <p>
       <Link to="/taskmanager">Go to Task Manager</Link>
       </p>
+      <button onClick={handleLogout}>Logout</button> 
     </section>
   ) : ( 
     <section>
@@ -93,11 +113,8 @@ const Login = () => {
         <button disabled={loading} type="submit">Sign In</button>
       </form>
         { !loading ? (<p>
-           Need an Account? <br />
-                  
+           Need an Account? <br /> 
               <Link to="/register">Sign Up</Link>
-
-          
         </p>): null}
     </section>
   )}
