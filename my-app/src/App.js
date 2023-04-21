@@ -1,8 +1,11 @@
 import './App.css';
 import React from 'react';
 import {useState} from 'react';
-import Login from'./Login';
-import Register from'./Register';
+import {Route, Routes} from "react-router-dom";
+
+import Login from'./Pages/Login';
+import Register from'./Pages/Register';
+
 
 function App() {
 
@@ -11,12 +14,20 @@ function App() {
 
   return (
     <main className="App">
-      {
+      {/* {
         // if form is not login, display register (ternary)
         currentForm === "login" ? <Login /> :  <Register /> 
-      }
+      } */}
       {/* <Register />
       <Login /> */}
+      
+      <><Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+     </Routes>
+     </>
+     
+      
     </main>
   );
 }
