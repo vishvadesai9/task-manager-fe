@@ -7,3 +7,5 @@ npm i @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @forta
 npm install react-router-dom
 
 npm install moment
+
+NEED TO BE INSTALL WITHIN my-app
