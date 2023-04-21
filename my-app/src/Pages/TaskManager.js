@@ -6,11 +6,16 @@ import TaskModal from '../../src/Pages/Form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-let user_id = "";
 let isEdit = false;
 let userTasks = [];
 let userTask = new Object();
+let user_id=""
 
+const loggedInUser = localStorage.getItem("user");
+if (loggedInUser) {
+  const foundUser = JSON.parse(loggedInUser);
+  user_id = foundUser.userdata.user_id || ""
+}
 const TaskManager = () =>  {
   let [gettingTasks, setGettingTasks] = useState(false);
 
@@ -74,6 +79,12 @@ const openEditModel = (item) => {
       setOpen(false);
   }
   };
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('myKey');
+    window.location.href = "/" 
+
+}
 
     const useSortableData = (items, config = null) => {
         const [sortConfig, setSortConfig] = React.useState(config);
@@ -118,7 +129,7 @@ const openEditModel = (item) => {
           return sortConfig.key === name ? sortConfig.direction : undefined;
         };
         return (
-           <div>{ !gettingTasks ? (<div><Button variant="contained" color="primary" onClick={handleOpen}>Create Task</Button>
+           <div><Button variant="contained" color="primary" onClick={handleLogout}>logout</Button>{ !gettingTasks ? (<div><Button variant="contained" color="primary" onClick={handleOpen}>Create Task</Button>
           <TaskModal open={open} onClose={handleClose} user_id={user_id} isEdit={isEdit} userTask={userTask}/>
           <table>
             <caption>Tasks</caption>
