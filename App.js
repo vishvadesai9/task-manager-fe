@@ -4,9 +4,9 @@ import React from 'react';
 import {useState} from 'react';
 import {Route, Routes} from "react-router-dom";
 
-import Login from'./Pages/Login';
-import Register from'./Pages/Register';
-import TaskManager from './Pages/TaskManager';
+import Login from'./Login';
+import Register from'./Register';
+import TaskManager from './TaskManager';
 
 
 
