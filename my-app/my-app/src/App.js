@@ -3,10 +3,9 @@ import './styles.css';
 
 import moment from 'moment'
 import { Button } from "@material-ui/core"
-import TaskModal from './Pages/Form'
+import TaskModal from '../../src/Pages/Form'
 
-let isEdit = false
-let userTask = new Object()
+
 
 const useSortableData = (items, config = null) => {
   const [sortConfig, setSortConfig] = React.useState(config);
@@ -45,17 +44,7 @@ const useSortableData = (items, config = null) => {
 
 
 const TaskViewer = (props) => {
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if(reason !== 'backdropClick') {
-      setOpen(false);
-  }
-  };
+  
   const { items, requestSort, sortConfig } = useSortableData(props.products);
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
@@ -65,8 +54,7 @@ const TaskViewer = (props) => {
   };
   return (
     <div>
-    <Button variant="contained" color="primary" onClick={handleOpen}>Create Task</Button>
-    <TaskModal open={open} onClose={handleClose} className="modal" user_id="d187d4ec-2a93-468b-b2ca-72609f6ae92e" isEdit={isEdit} userTasks={userTask}/>    
+        
     <table>
       <caption>Tasks</caption>
       <thead>
