@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 
 const Login = () => {
+  let userData = new Object()
 
     const userRef = useRef(); // set focus on input when component loads
     const errRef = useRef(); // set focus on screen reader when error occurs
@@ -12,7 +13,7 @@ const Login = () => {
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState(''); // if error when authenticate 
     const [success, setSuccess] = useState(false); // for testing -> will be replace with react router (page)
-
+    const [loading, setLoading] = useState(false);
     // set focus on input when component loads
     useEffect(() => {
         userRef.current.focus();
@@ -26,10 +27,30 @@ const Login = () => {
     // prevent reload of the page
     const handleSubmit = async (e) => {
       e.preventDefault();
-      console.log(user,pwd);
-      setUser("");
-      setPwd("");
-      setSuccess(true);
+      try {
+        setLoading(true)
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pwd })
+        }
+        const url = 'https://task-manager-api-tcy9.onrender.com/login/';
+        let response = await fetch(url, requestOptions)
+        let responseJson = await response.json()
+        console.log(responseJson)
+        if (responseJson.success){
+          setSuccess(responseJson.success)
+          userData = responseJson
+        }
+        else{
+          setErrMsg(responseJson.message)
+        }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false)
+    }
+      
     }
   
   return (
@@ -39,7 +60,7 @@ const Login = () => {
       <h1>You are logged in!</h1>
       <br />
       <p>
-      <a href="#">Go to Task Manager</a>
+      <Link to="/taskmanager">Go to Task Manager</Link>
       </p>
     </section>
   ) : ( 
@@ -69,14 +90,15 @@ const Login = () => {
           value = {pwd}
           required
         />
-        <button>Sign In</button>
+        <button disabled={loading} type="submit">Sign In</button>
       </form>
-        <p>
+        { !loading ? (<p>
            Need an Account? <br />
-            <span className='line'>
-              <Link to="/register">Sign In</Link>
-            </span>
-        </p>
+                  
+              <Link to="/register">Sign Up</Link>
+
+          
+        </p>): null}
     </section>
   )}
   </>

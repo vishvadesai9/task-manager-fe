@@ -81,6 +81,9 @@ const TaskManager = () =>  {
                   </button>
                 </th>
                 <th>
+                  Description
+                </th>
+                <th>
                   <button
                     type="button"
                     onClick={() => requestSort('status')}
@@ -98,14 +101,19 @@ const TaskManager = () =>  {
                     Due Date
                   </button>
                 </th>
+                <th> 
+                    Edit/Delete
+                </th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
                 <tr key={item.id}>
                   <td>{item.title}</td>
+                  <td>{item.description}</td>
                   <td>{item.status}</td>
-                  <td>{item.dueDate}</td>
+                  <td>{item.due_date}</td>
+                  <td></td>
                 </tr>
               ))}
             </tbody>
@@ -118,13 +126,13 @@ const TaskManager = () =>  {
         <div className="App">
           <TaskViewer
             products={[
-              { id: 1, title: 'Task1', status: "DONE", dueDate: moment(new Date("2016-01-02 10:34:23")).format('MM-DD-YYYY') },
-              { id: 2, title: 'Task2', status: "TO DO", dueDate: moment(new Date("2017-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 3, title: 'Task3', status: "IN_PROGRESS", dueDate: moment(new Date("2018-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 4, title: 'Task4', status: "IN_PROGRESS", dueDate: moment(new Date("2019-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 5, title: 'Task5', status: "TO DO", dueDate: moment(new Date("2015-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 6, title: 'Task6', status: "DONE", dueDate: moment(new Date("2011-01-04 10:34:23")).format('MM-DD-YYYY') },
-              { id: 7, title: 'Task7', status: "TO DO", dueDate: moment(new Date("2026-01-04 10:34:23")).format('MM-DD-YYYY') },
+              { id: 1, title: 'Task1', description: "description", status: "DONE", due_date: moment(new Date("2016-01-02 10:34:23")).format('MM-DD-YYYY') },
+              { id: 2, title: 'Task2', description: "description", status: "TO DO", due_date: moment(new Date("2017-01-04 10:34:23")).format('MM-DD-YYYY') },
+              { id: 3, title: 'Task3', description: "description", status: "IN_PROGRESS", due_date: moment(new Date("2018-01-04 10:34:23")).format('MM-DD-YYYY') },
+              { id: 4, title: 'Task4', description: "description", status: "IN_PROGRESS", due_date: moment(new Date("2019-01-04 10:34:23")).format('MM-DD-YYYY') },
+              { id: 5, title: 'Task5', description: "description", status: "TO DO", due_date: moment(new Date("2015-01-04 10:34:23")).format('MM-DD-YYYY') },
+              { id: 6, title: 'Task6', description: "description", status: "DONE", due_date: moment(new Date("2011-01-04 10:34:23")).format('MM-DD-YYYY') },
+              { id: 7, title: 'Task7', description: "description", status: "TO DO", due_date: moment(new Date("2026-01-04 10:34:23")).format('MM-DD-YYYY') },
             ]}
           />
         </div>

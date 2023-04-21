@@ -1,7 +1,5 @@
-import React from 'react'
-import {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -27,6 +25,7 @@ const Register = () => {
 
   const [errMsg, setErrMsg] = useState(''); // if error when authenticate
   const [success, setSuccess] = useState(false); // for testing -> will be replace with react router (page)
+  let [loading, setLoading] = useState(false);
 
   
   
@@ -47,6 +46,10 @@ useEffect(() => {
     setErrMsg('');
 }, [user, pwd, matchPwd])
 
+const signUp = async () => {
+    
+
+}
 const handleSubmit = async (e) => {
     e.preventDefault();
     // if button enabled with JS hack
@@ -56,6 +59,25 @@ const handleSubmit = async (e) => {
         setErrMsg("Invalid Entry");
         return;
     }
+    try {
+        setLoading(true)
+          const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pwd })
+          }
+          const url = 'https://task-manager-api-tcy9.onrender.com/signup/';
+          let response = await fetch(url, requestOptions)
+          let responseJson = await response.json()
+          console.log(responseJson)
+          if (responseJson?.success === false){
+            console.log(responseJson?.message)
+          }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false)
+      }
     // try {
     //     const response = await axios.post(REGISTER_URL,
     //         JSON.stringify({ user, pwd }),
@@ -91,7 +113,7 @@ const handleSubmit = async (e) => {
         <section>
             <h1>Success!</h1>
             <p>
-                <a href="#">Sign In</a>
+                <Link to="/">Sign In</Link>
             </p>
         </section>
     ) : (
@@ -170,15 +192,19 @@ const handleSubmit = async (e) => {
                     Must match the first password input field.
                 </p>
 
-                <button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
+                <button disabled={!validName || !validPwd || !validMatch ? true : false} onClick={signUp}>Sign Up</button>
             </form>
-            <p>
+            {!loading ? (
+                <p>
                 Already registered?<br />
+            
                 <span className="line">
-                    {/*put router link to login here*/}
+                    
                     <Link to="/">Sign In</Link>
                 </span>
             </p>
+            ) : null}
+            
         </section>
     )}
 </>
